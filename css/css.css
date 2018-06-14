@@ -1,0 +1,55 @@
+/* Native Elements */
+body{ background-color : #99b3ff}
+h5	{text-align : center ;  margin-bottom : 10px}
+label {margin-top: 15px}
+input {text-transform:uppercase}
+td {margin: 5px}
+
+/* Print Format */
+
+
+@page {size: 210mm 297mm; margin: 10mm;}
+
+@media all   { .printable	{ display: none; } }
+@media print { .printable  { display: block; font-size: 9px} }
+
+@media print { .print-table {width: 100%} }
+
+@media all   { .not-printable	{ display: block; } }
+@media print { .not-printable  { display: none; }}
+
+@media all { .page-break	{ display: none; page-break-before: always !important; } }
+@media print { .page-break  { display: block;  page-break-before: always !important; }}
+
+/* Div Header */
+.jumbotron {	background-color : #99b3ff; height: 180px}
+
+/* Modal Elements */
+.btn-group{ height : 50px; margin-bottom: 0px}
+.container {	margin-top : 10px; width : auto; height : auto; }
+.panel-group { margin-top : 25px; }
+#progressivo-evento {  margin-right:100px;	max-width : 50px;}
+.short-input {	max-width : 70px; }
+#numero-evento { max-width: 250px; }
+.dates { width : 50%; }
+#ora-evento { max-width : 100px;}
+.modal-dialog { width: 80%; min-width : 900px; }
+#progressivo-evento { }
+#provenienza { margin-right:15px;}
+#input-group-create-form { margin-top: 50px; }
+.floating-right {text-align: right }
+.tabled-input-group {width : 90% ; margin:auto ; margin-top : 50px; border-spacing: 20px; border-collapse: separate}
+.btn-xs {margin-left : 5px}
+.not-visible { display:none }
+.alert {  position: absolute; margin : auto;  height : 250px;  width : 40%;  z-index : 5 }
+.edit-btn  {width: :80px ; height: 25px}
+#progressivi {color : red ; text-align : center; }
+#home-container {background-color: azure}
+.dataTables_wrapper{margin-top: 20px ; margin-bottom: 20px}
+#date-filter-div{ float : right; font-size: 16px ; font-style: bold ;  margin-top: 10px}
+.dataTables_length  {margin-left: 10px}
+#create-event-form {margin-top: 50px}
+#nav-tab {font-size: 24px}
+#table-container {overflow-x: scroll}
+#print-container {text-align: center ; margin-top: 50px; margin-bottom: 50px}
+#tabled-inputs { margin: 50px }

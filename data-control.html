@@ -1,0 +1,153 @@
+<html> 
+    
+    <head>
+        <meta charset="utf-8">
+        <script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+      <script type="text/javascript" src="jQuery/jquery-ui.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+      <script src = "https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/src/loadingoverlay.min.js"></script>
+      <script src = "https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/extras/loadingoverlay_progress/loadingoverlay_progress.min.js"></script>
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+      <link rel="stylesheet" href="css/css.css">
+      <script src = "js/firebase.js"></script>
+      <script src = "js/function.js"></script>
+        <script>
+        
+        $(document).ready(function(){
+                    
+        $("#removeAll").on('click',function(){
+         
+        alert("ok hai clickato rimuovi tutto");
+         
+        var eventToRemove = firebase.database().ref("/");
+        eventToRemove.remove();
+         
+            });      
+            
+        });
+      
+     
+            
+        function handleFiles(files) {
+      // Check for the various File API support.
+      if (window.FileReader) {
+          // FileReader are supported.
+          getAsText(files[0]);
+      } else {
+          alert('FileReader are not supported in this browser.');
+      }
+    }
+ 
+    function getAsText(fileToRead) {
+      var reader = new FileReader();
+      // Read file into memory as UTF-8      
+      reader.readAsText(fileToRead);
+      // Handle errors load
+      reader.onload = loadHandler;
+      reader.onerror = errorHandler;
+    }
+ 
+    function loadHandler(event) {
+      var csv = event.target.result;
+      processData(csv);
+    }
+ 
+    function processData(csv) {
+             $.LoadingOverlay("show");
+        var ref = "";
+//        ref = 'events-clos/';
+        
+        var allTextLines = csv.split(/\r\n|\n/);
+        var lines = [];
+        for (var i=0; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(';');
+            var tarr = [];
+                 
+            for (var j=0; j<data.length; j++) {
+                 
+                tarr.push(data[j]);
+         
+            }
+            
+            lines.push(tarr);
+            
+            var dateArr = tarr[2].split('-');
+            var provenienzaArr = tarr[10].split('-');
+            
+            var provenienza = provenienzaArr[2] + '-' + provenienzaArr[1] + '-' + provenienzaArr[0];
+            
+            var twoYearAgo = new Date();
+            
+            twoYearAgo.setHours(0);
+            twoYearAgo.setMinutes(0);
+            twoYearAgo.setSeconds(0);
+            twoYearAgo.setMilliseconds(0);
+            
+			twoYearAgo = twoYearAgo - 31104000000;
+			
+            var date = new Date();
+            date.setFullYear(dateArr[2]);
+            date.setMonth(+dateArr[1]-1);
+            date.setDate(dateArr[0]);
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+
+            var rg = pad(tarr[12],8);
+            var formattedRG = rg.substring(0,6) + "-" + rg.substring(6);
+            var differenza = date - twoYearAgo;
+            
+            if (tarr[13] == 'VERO'){      
+                ref = 'events-susp/';
+            }
+            
+            else{
+                if (differenza<0)    
+                    ref = 'events-past/';
+            
+                else if (differenza >= 0)
+                    ref = 'events-pres/';
+            }        
+            
+            firebase.database().ref(ref + tarr[0] + '/' + tarr[1]).set({
+            'numero'        : tarr[0],
+            'progressivo'   : tarr[1],
+            'dataEvento'    : date.getFullYear() + "-" + pad((+date.getMonth()+1),2) + "-" + pad(date.getDate(),2),
+            'oraEvento'     : tarr[3],
+            'curia'         : tarr[4],
+            'giudice'       : tarr[5],
+            'parte'         : tarr[6],
+            'cParte'        : tarr[7],
+            'adempimento'   : tarr[8],
+            'provvedimento' : tarr[9],
+            'provenienza'   : provenienza,
+            'dataPreavviso' : tarr[11],
+            'rg'            : formattedRG,
+            'sospesa'       : tarr[13]
+            });             
+        }       
+        
+        $.LoadingOverlay("hide");
+    }
+ 
+    function errorHandler(evt) {
+      if(evt.target.error.name == "NotReadableError") {
+          alert("Canno't read file !");
+      }
+    }
+     
+        
+        </script>
+
+    </head>
+    <body>
+    <button id = "removeAll" class="btn btn-lg">Remove ALL</button>
+        <script type="text/javascript" ></script>
+        <input type="file" id="csvFileInput" class = "btn btn-lg" onchange="handleFiles(this.files)" accept=".csv">Carica Dati
+    </body>
+    
+</html>

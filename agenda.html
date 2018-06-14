@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Agenda Legale</title>
+    <meta charset="utf-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
+    <script type="text/javascript" src="jQuery/jquery-ui.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script src = "https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/src/loadingoverlay.min.js"></script>
+    <script src = "https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/extras/loadingoverlay_progress/loadingoverlay_progress.min.js"></script>
+
+    
+    <script src = "js/function.js"></script>
+    <script src = "js/print.js"></script>
+    <script src = "js/firebase.js"></script> 
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="css/css.css">
+    
+
+</head>
+    <!--<div class = "not-nested">-->
+<body>
+<div class = "not-printable">
+<div class="jumbotron text-center">
+  <!--<h1>Studio Legale Calabrò</h1>
+  <p>Agenda Legale</p>-->
+<h1>Studio Calabrò</h1>
+  <p>Agenda Legale</p>
+</div>
+	
+	
+<div class="container" id = "home-container">
+
+<ul class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#events-list-tab" role="tab" aria-controls="home">Elenco</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#events-search-tab" role="tab" aria-controls="profile">Ricerca</a>
+  </li>
+<!--
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#events-create-tab" role="tab" aria-controls="messages">Crea</a>
+  </li>
+-->
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#events-print-tab" role="tab" aria-controls="settings">Stampa</a>
+  </li>
+</ul>
+
+	
+	
+	
+	
+<div class="tab-content">
+  	
+	<div class="tab-pane active" id="events-list-tab" role="tabpanel">
+	  	<div id = 'table-container'>
+            <table id = "all-events-table" class="table table-bordered table-striped ">
+                <thead>
+                    <tr>
+                        <th>Numero</th>
+                        <th>Data e Ora</th>
+                        <th>Curia</th>
+                        <th>Giudice</th>
+                        <th>Parte</th>
+                        <th>C/Parte</th>
+                        <th>Adempimento</th>
+                        <th>Provvedimento</th>
+                        <th>R.G.</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Numero</th>
+                        <th>Data e Ora</th>
+                        <th>Curia</th>
+                        <th>Giudice</th>
+                        <th>Parte</th>
+                        <th>C/Parte</th>
+                        <th>Adempimento</th>
+                        <th>Provvedimento</th>
+                        <th>R.G.</th>
+                        <th>Azioni</th>
+                    </tr>
+                </tfoot>
+                <tbody id="all-events">
+                </tbody>
+            </table>
+        </div>
+	
+	</div>
+  
+	
+	<div class="tab-pane" id="events-search-tab" role="tabpanel">
+	<center>	
+		<table id = 'tabled-inputs'>
+            <form id = 'search-criteria-form' class = 'form-group form-inline'>
+				<tr><td>
+                    
+                    Numero </td>
+                    
+					<!--<select id="select-search-field">
+					  <option value = 'numero'>Numero</option>
+					  <option value = 'data'>Data</option>
+					  <option value = 'giudice'>Giudice</option>
+					  <option value = 'curia'>Curia</option>
+					  <option value = 'parte'>Parte</option>
+					  <option value = 'cParte'>Contro Parte</option>
+					  <option value = 'rg'>RG</option>
+					</select>-->
+                    
+					<td><input type = "text" id = 'text-search-input'></td>
+					<td><button type="button" id = 'search-criteria-btn'>Cerca</button></td>
+				</tr>
+				
+            </form>
+        </table></center>
+	</div>
+  
+	
+<!--
+	<div class="tab-pane" id="events-create-tab" role="tabpanel">
+		<button id = 'crea-evento-btn' class='btn'>Crea un Nuovo Evento</button>
+        <button id = 'crea-config-btn' class='btn'>Crea una Nuova Configurazione</button>
+	</div>
+-->
+  
+	
+	<div class="tab-pane" id="events-print-tab" role="tabpanel">
+		
+		<div id = 'print-container'>
+			<label>Da</label><input id = 'print-from-input' type="date">
+			<label>A</label><input id = 'print-to-input' type="date">
+			<button class = 'btn' id = 'print-button'>Stampa</button>
+		</div>
+	</div>
+</div>
+	
+<!-- Create Event Modal -->
+<div id="modal-crea-evento" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="modal-title">Crea Evento</h4>
+      </div>
+      <div class="modal-body">
+
+	  <form>
+		  <div class="form-group form-inline floating-right">
+			<label for="numero-evento">Numero</label>
+			<input type="text"  required id="numero-evento"> 
+			<input type="text"  required id="progressivo-evento">
+			
+			<label for="provenienza">Provenienza</label>
+			<input type="date" class="dates" id="provenienza">
+
+			<label for="data">Data</label>
+			<input type="date" class=" dates" required id="data">
+			<input type="time"  required id = "ora-evento">
+		    
+            <!--<label style = "margin-left: 10px" for="data-preavviso-calc">Giorni di Preavviso</label>
+			<input type="text" style = "max-width: 50px" class=" " id="data-preavviso-calc">-->
+		  </div>		
+		  
+		  
+		<table class="tabled-input-group">
+		<tr>
+		 <div class="form-group">
+			<td><label for="curia">Curia</label>
+			<input type="text"  id="curia"></td>
+			<td><label for="giudice">Giudice</label>
+			<input type="text" class=" " id="giudice"></td>
+
+			<td><label for="provenienza">Parte</label>
+			<input type="text" class=" " id="parte"></td>
+			<td><label for="c-parte">C/Parte</label>
+			<input type="text" class=" " id="c-parte"></td>
+		</div>
+		</tr>
+		<tr>
+		<div class="form-group">
+			<td><label for="adempimento">Adempimento</label>
+			<input type="text" class=" " id="adempimento"></td>
+			<td><label for="provvedimento">Provvedimento</label>
+			<input type="text" class=" " id="provvedimento"></td>
+
+			<td><label for="data-preavviso">Data Preavviso</label>
+			<input type="date" class=" " id="data-preavviso"></td>
+			<td><label for="atto-preavviso">Atto Preavviso</label>
+			<input type="text" class=" " id="atto-preavviso"></td>
+		</div>
+		</tr>  
+		<tr>
+            <div class="form-group">	
+			<td><label for="rg">R.G.</label>
+				<input type="text" class=" " id="rg"></td>
+			<td>
+			<div class="checkbox input-lg">
+			  <label><input type="checkbox" value="Sospesa" id = "sospesa">Sospesa</label>
+			</div></td>
+		</div>
+		
+		  </table>  
+        </form>
+          <div class="collapse" id="collapseExample">
+</div>
+          
+    <div id = related-events>
+    <h4>Correlati</h4>
+    <table class = "table table-bordered table-striped"><thead>
+      <tr>
+		<th>Progressivo</th>
+		<th>Curia</th>
+		<th>Giudice</th>
+		<th>Adempimento</th>
+		<th>Provvedimento</th>
+        <th>Data</th>
+      </tr>
+    </thead><tbody id = "related-events-table"></tbody></table>
+          </div>        
+    </div>
+          
+        
+
+        
+        <!-- <h3 id = "progressivi"></h3> -->
+      <div class="modal-footer">	
+            <button class="btn btn-primary" type="button" id = 'scadenze-btn'>Crea Scadenze</button>
+		<button type = "button" id = "elimina-evento-btn" class = "btn btn-danger">Elimina</button>
+	  	<button type = "button" id = "copia-evento-btn" class = " btn-info btn">Copia</button>
+
+		<button type = "submit" class="btn btn-success" id = "salva-evento">Salva</button>  
+		<button type = "button" data-dismiss = 'modal' class = "btn btn-danger">Chiudi</button>  
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<div id="sospesi-modal" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="modal-title">Stampa sospesi</h4>
+      </div>
+      <div class="modal-body">
+          <div id = 'print-suspended-table'></div>
+    </div>
+    <div class="modal-footer">
+		<button type = "button" class="btn btn-success" id = "stampa-sospesi-btn" data-dismiss="modal">Stampa</button>
+		<button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button>
+      </div>
+    </div>
+  </div>
+</div>
+    
+<div id="scadenze-modal" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Scadenze Automatiche</h4>
+      </div>
+      <div class="modal-body">
+          
+	 <table class="table table-bordered table-striped ">
+		 <tr><td style = 'text-align: right'><b>Numero</b></td><td id = 'numero-exp'><td style = 'text-align: right'><b>Data</b></td><td><p id = 'data-exp'></p></td></tr>
+		 <tr><td style = 'text-align: right'><b>Parte</b></td><td id = 'parte-exp'><td style = 'text-align: right'><b>Contro Parte</b></td><td><p id = 'c-parte-exp'></p></td></tr>
+		 <tr><td style = 'text-align: right'><b>Giudice</b></td><td id = 'giudice-exp'><td style = 'text-align: right'><b>Curia</b></td><td><p id = 'curia-exp'></p></td></tr>
+		 <tr><td style = 'text-align: right'><b>Provenienza</b></td><td id = 'provenienza-exp'><td style = 'text-align: right'><b>RG</b></td><td><p id = 'rg-exp'></p></td></tr>
+	</table>
+          
+		  <select  id="select-scadenze-automatiche">
+			  <option selected = 'libero'>Libero</option>
+			  <option value = 'costituzione'>Costituzione</option>
+			  <option value = 'tipo2'>Tipo Scadenza 2</option>
+			  <option value = 'tipo3'>Tipo Scadenza 3</option>
+			  <option value = 'tipo4'>Tipo Scadenza 4</option>
+			  <option value = 'tipo5'>Tipo Scadenze 5</option>
+			  <option value = 'tipo6'>Tipo Scadenze 6</option>
+		  </select>
+          
+          <form id = 'form-exp' style = 'margin: 5px'>
+            <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' id = 'progressivo1'><input   type="text" placeholder = "ADEMPIMENTO" id = "adempimentoExp1"><input  type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp1"><input class = 'short-input focus-out-calc' type="text" id = "preavvisoExp1" ><select  id="riferimento1">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input  type = 'date' id = 'dateExp1' ><input type='checkbox'  class = 'checkExp' id='checkExp1'/> <p id = 'txt1'></p>
+          </div>    
+                  <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' id = 'progressivo2'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp2"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp2"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp2"><select  id="riferimento2">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp2'><input type='checkbox'  class = 'checkExp' id='checkExp2'/><p id = 'txt2'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' id = 'progressivo3'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp3"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp3"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp3"><select  id="riferimento3">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp3'><input type='checkbox'  class = 'checkExp' id='checkExp3'/><p id = 'txt3'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' id = 'progressivo4'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp4"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp4"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp4"><select  id="riferimento4">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp4'><input type='checkbox'  class = 'checkExp' id='checkExp4'/><p id = 'txt4'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' id = 'progressivo5'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp5"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp5"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp5"><select  id="riferimento5">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp5'><input type='checkbox' class = 'checkbox' id = 'checkbox5'/><p id = 'txt5'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' id = 'progressivo6'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp6"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp6"><input   class = 'short-input focus-out-calc' type="text" id = "preavvisoExp6"><select  id="riferimento6">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp6'><input type='checkbox' class = 'checkbox' id = 'checkbox6'/><p id = 'txt6'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' id = 'progressivo7'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp7"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp7"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp7"><select  id="riferimento7">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp7'><input type='checkbox'  class = 'checkExp' id='checkExp7'/><p id = 'txt7'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+
+                <input type = "text" class = 'short-input' id = 'progressivo8'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp8"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp8"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp8"><select  id="riferimento8">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp8'><input type='checkbox'  class = 'checkExp' id='checkExp8'/><p id = 'txt8'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+
+                <input type = "text" class = 'short-input' id = 'progressivo9'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp9"><input    type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp9"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp9"><select  id="riferimento9">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp9'><input type='checkbox'  class = 'checkExp' id='checkExp9' /><p id = 'txt9'></p>
+          </div>    
+            <div class = 'form-group form-inline'>
+                <input type = "text" class = 'short-input' class = 'short-input focus-out-calc' id = 'progressivo0'><input    type="text" placeHolder = "ADEMPIMENTO" id = "adempimentoExp0"><input  type="text" placeholder = "PROVVEDIMENTO" id = "provvedimentoExp0"><input  class = 'short-input focus-out-calc'  type="text" id = "preavvisoExp0"><select  id="riferimento0">
+              <option value = 'evento'>Data Evento</option>
+              <option value = 'proven'>DataProvenienza</option>
+          </select><input    type = 'date' id = 'dateExp0'><input type='checkbox'  class = 'checkExp' id='checkExp0'/><p id = 'txt0'></p>
+          </div>    
+          </form>
+    </div>
+    <div class="modal-footer">
+		<button type = "button" class="btn btn-success" id = "save-exp-btn" data-dismiss="modal">Salva</button>
+		<button type="button" class="btn-danger btn" data-dismiss="modal">Chiudi</button>
+      </div>
+    </div>
+  </div>
+</div>    
+    
+<div id="search-criteria-modal" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="modal-title">Ricerca Eventi</h4>
+      </div>
+      <div class="modal-body">
+          <div id = 'search-criteria-table'></div>
+    </div>
+    <div class="modal-footer">
+		<button type = "button" class="btn btn-success" id = "stampa-search-criteria-btn" data-dismiss="modal">Stampa</button>
+		<button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button>
+      </div>
+    </div>
+  </div>
+</div>  
+    
+    <div id="login-modal" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="modal-title">Log-in</h4>
+      </div>
+      <div class="modal-body">
+
+          <center>
+          
+              <p>Password: </p> <input id = 'pass-login-input' type = 'text'>
+              
+          </center>
+          
+    </div>
+    <div class="modal-footer">
+		<button type = "button" class="btn btn-success" id = "login-button" data-dismiss="modal">Log - In</button>
+		<button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    <h5>Developed by MediaTeamSoftware (FR)</h5>
+
+</div>
+	</div>    
+    
+    
+<div id = "print-table-div" style="width: 100%" class = "printable"></div>
+
+	
+
+</body>
+
+
+
+</html>
